@@ -11,6 +11,14 @@ key_control.set(KEYVALUES[0])
 root.title("MIDI Sequencer")
 
 
+def onValidate(S):
+    if S.isalnum():
+        return True
+    else:
+        root.bell()
+        return False
+
+
 def printfilename(event):
     print(root.name)
 
@@ -39,57 +47,34 @@ label1.grid(row=1)
 # Print File path button 
 button2 = Button(root, text="Print file path")
 button2.bind("<Button-1>", printfilename)
-button2.grid(row=2)
+button2.grid(row=4)
 
 # Key option menu
 key = OptionMenu(root, key_control, *KEYVALUES)
-key.grid(row=2, column=1)
+key.grid(row=3, column=1, sticky=W)
 
 # Convert to Midi button
 button3 = Button(root, text="Convert")
-button3.bind("<Button-1>", lambda event: midi_test.convertToMidi(event, name, key_control))
-button3.grid(row=2, column=10)
+button3.bind("<Button-1>", lambda event: midi_test.convertToMidi(event, root.name, key_control.get(), entry1.get()))
+button3.grid(row=4, column=10)
+
+# Name Label
+label2 = Label(root, text="Name of converted file:")
+label2.grid(row=2)
+
+# Name Entry
+vcmd = (root.register(onValidate), '%S')
+entry1 = Entry(root, validate="key", validatecommand=vcmd)
+entry1.insert(END, 'myMIDI')
+entry1.grid(row=2, column=1)
+
+# Key Label
+label3 = Label(root, text="Key of file:")
+label3.grid(row=3)
 
 # Quit Button
 quitButton = Button(root, text="Quit", command=root.destroy)
-quitButton.grid(row=2,column=24,sticky=E)
-'''
-label1 = Label(root, text="Name")
-label2 = Label(root, text="Password")
-check = Checkbutton(root, text="Keep me logged in")
-entry1 = Entry(root)
-entry2 = Entry(root)
-
-label1.grid(row=0, column=0, sticky=E)
-label2.grid(row=1, column=0, sticky=E)
-check.grid(columnspan=2)
-entry1.grid(row=0, column=1)
-entry2.grid(row=1, column=1)
-'''
-
-'''
-topFrame = Frame(root)
-topFrame.pack()
-bottomFrame = Frame(root)
-bottomFrame.pack(side=BOTTOM)
-
-one = Label(root, text="One", bg="red", fg="white")
-one.pack()
-two = Label(root, text="Two", bg="green", fg="black")
-two.pack(fill=X)
-three = Label(root, text="Three", bg="blue", fg="white")
-three.pack(side=LEFT, fill=Y)
-
-button1 = Button(topFrame, text="Button 1", fg="red")
-button2 = Button(topFrame, text="Button 2", fg="blue")
-button3 = Button(topFrame, text="Button 3", fg="green")
-button4 = Button(bottomFrame, text="Button 4", fg="purple")
-
-button1.pack(side=LEFT)
-button2.pack(side=RIGHT)
-button3.pack(side=BOTTOM)
-button4.pack(side=TOP)
-'''
+quitButton.grid(row=4,column=24,sticky=E)
 
 root.mainloop()
 

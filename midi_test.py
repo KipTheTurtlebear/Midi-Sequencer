@@ -3,13 +3,15 @@ from tkinter import *
 from mido import Message
 
 
-def convertToMidi(event, filename, keynote):
+def convertToMidi(event, filename, keynote, saveName):
     mid = mido.MidiFile(type=0)
     track = mido.MidiTrack()
     mid.tracks.append(track)
 
     track.append(mido.MetaMessage('time_signature'))
     track.append(mido.MetaMessage('key_signature', key=keynote))
+
+    print("Filename: " + filename)
 
     with open(filename, "r") as src:
         for line in src:
@@ -19,6 +21,4 @@ def convertToMidi(event, filename, keynote):
 
     track.append(mido.MetaMessage('end_of_track'))
 
-    name = input("Name this track: ")
-
-    mid.save(name + '.mid')
+    mid.save(saveName + '.mid')
