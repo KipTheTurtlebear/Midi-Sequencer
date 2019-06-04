@@ -16,7 +16,20 @@ def convertToMidi(event, filename, keynote, saveName):
     with open(filename, "r") as src:
         for line in src:
             command, channel, note, velocity, time = line.strip().split(",")
-            msg = Message(command, note=int(note), velocity=int(velocity), time=int(time))
+            if command == 'note_on' or command == 'note_off':
+                msg = Message(command, channel=int(channel), note=int(note), velocity=int(velocity), time=int(time))
+            elif command == 'polytouch':
+                msg = Message(command, channel=int(channel), note=int(note), value=int(velocity))
+            elif command == 'control_change':
+                msg = Message(command, channel=int(channel), control=int(note), value=int(velocity))
+            elif command == 'program_change':
+                msg = Message(command, channel=int(channel), program=int(note))
+            elif command == 'aftertouch':
+                msg = Message(command, channel=int(channel), value=int(note))
+            elif command == 'pitchwheel':
+                msg = Message(command, channel=int(channel), pitch=int(note))
+            elif command == 'sysex':
+                msg = Message(command, data=int(channel))
             track.append(msg)
 
     track.append(mido.MetaMessage('end_of_track'))
